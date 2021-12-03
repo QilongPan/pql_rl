@@ -36,3 +36,15 @@ class EnvContainer(gym.Env):
 
     def random_actions(self):
         return [env.action_space.sample() for env in self.envs]
+
+    def run(self):
+        for env in self.envs:
+            env.reset()
+            for _ in range(1000):
+                if args.render:
+                    env.render()
+                action = env.action_space.sample()  # take a random action
+                observation, reward, done, info = env.step(action)
+                if done:
+                    print(f"{i+1} done!!!!")
+                    break

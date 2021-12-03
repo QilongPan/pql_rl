@@ -11,7 +11,7 @@ class Collector(object):
     def collect(self, epsode_ls):
         """
         Args:
-            epsode_ls:every env collect epsode
+            epsode_ls:every env collect episode
         """
         obs = self.env_container.reset()
         while True:
@@ -39,8 +39,13 @@ class Collector(object):
 if __name__ == "__main__":
     import gym
 
+    from pql_rl.env_container import EnvContainer
+    from pql_rl.replay_buffer import ReplayBuffer
+
     env_num = 2
+    buffer_size = 100
     envs = [gym.make("CartPole-v1") for i in range(env_num)]
-    collector = Collector(envs)
+    env_container = EnvContainer(envs)
+    replay_buffer = ReplayBuffer(buffer_size)
+    collector = Collector(env_container, replay_buffer=replay_buffer)
     collector.collect([1 for i in range(env_num)])
-    pass
