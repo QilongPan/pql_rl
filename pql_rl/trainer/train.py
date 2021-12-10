@@ -1,5 +1,4 @@
 class Trainer(object):
-
     def __init__(self) -> None:
         super().__init__()
 
@@ -10,8 +9,9 @@ class Trainer(object):
         3.测试
         """
 
+
 if __name__ == "__main__":
-    
+
     import gym
     from pql_rl.actor.base import Actor
     from pql_rl.buffer.base import ReplayBuffer
