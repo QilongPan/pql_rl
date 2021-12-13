@@ -25,4 +25,4 @@ class DiscreteRandomPolicy(object):
 
 if __name__ == "__main__":
     discrete_random_policy = DiscreteRandomPolicy(10)
-    print(discrete_random_policy([12, 1, 1, 1, 1]))
+    print(discrete_random_policy([12, 1, 1, 1, 1，100]))
