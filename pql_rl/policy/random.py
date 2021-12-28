@@ -32,8 +32,12 @@ class DiscreteRandomPolicy(object):
         # p.add_argument('--adam_beta1', default=0.9, type=float, help='Adam momentum decay coefficient')
         # p.add_argument('--adam_beta2', default=0.999, type=float, help='Adam second momentum decay coefficient')
 
-        # p.add_argument('--gae_lambda', default=0.95, type=float, help='Generalized Advantage Estimation discounting (only used when V-trace is False')        
+        # p.add_argument('--gae_lambda', default=0.95, type=float, help='Generalized Advantage Estimation discounting (only used when V-trace is False')
+
+    def train(self):
+        pass
+
 
 if __name__ == "__main__":
     discrete_random_policy = DiscreteRandomPolicy(10)
-    print(discrete_random_policy([12, 1, 1, 1, 1，100]))
+    print(discrete_random_policy([12, 1, 1, 1, 1, 100]))

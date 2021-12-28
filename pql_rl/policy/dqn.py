@@ -28,23 +28,24 @@ class Net(nn.Module):
 
 
 class DQN(object):
-    def __init__(self, batch_size, device, input_dim, output_dim, e_greedy):
+    def __init__(self, model, cfg):
+        self.model = model
+        self.cfg = cfg
         self.replay_buffer = deque(maxlen=1000)
-        self.batch_size = batch_size
-        self.device = device
-        self.input_dim = input_dim
-        self.output_dim = output_dim
-        self.e_greedy = e_greedy
-        self.gamma = 0.9
-        self.q_net = Net(input_dim, output_dim)
+        self.batch_size = self.cfg.batch_size
+        self.device = self.cfg.device
+        self.input_dim = self.cfg.observation_dim
+        self.output_dim = self.cfg.action_num
+        self.e_greedy = self.cfg.eps
+        self.gamma = self.cfg.gamma
+        self.q_net = Net(self.input_dim, self.output_dim)
         self.loss_fun = nn.MSELoss()
         self.optimizer = torch.optim.Adam(self.q_net.parameters())
-        pass
 
     def store_transition(self, obs, actor, reward, next_obs, done):
         self.replay_buffer.append((obs, actor, reward, next_obs, done))
 
-    def learn(self):
+    def train(self):
         if len(self.replay_buffer) < self.batch_size:
             return
         minibatch = random.sample(self.replay_buffer, self.batch_size)
@@ -91,16 +92,6 @@ class DQN(object):
     def add_args(cls, parser):
         p = parser
         # super().add_args(p)
-        p.add_argument("--epoch", default=100, type=int, help="train epoch")
-        p.add_argument(
-            "--batch_size", default=32, type=int, help="train batch size"
-        )
-        p.add_argument(
-            "--device",
-            default="cuda" if torch.cuda.is_available() else "cpu",
-            type=str,
-            help="train device",
-        )
         p.add_argument(
             "--eps", default=0.3, type=float, help="train explore probability"
         )

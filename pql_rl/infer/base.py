@@ -25,6 +25,7 @@ class InferServer(object):
 
 
 if __name__ == "__main__":
+
     from pql_rl.policy.random import DiscreteRandomPolicy
 
     infer_server = InferServer(DiscreteRandomPolicy(action_num=6))

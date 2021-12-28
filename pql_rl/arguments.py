@@ -4,6 +4,8 @@
 import argparse
 import sys
 
+import torch
+
 
 def get_policy_class(policy):
     policy_class = None
@@ -46,6 +48,16 @@ def arg_parser(argv=None, evaluation=False):
         required=True,
         help="Fully-qualified environment name in the form envfamily_envname, e.g. atari_breakout or doom_battle",
     )
+    parser.add_argument("--epoch", default=100, type=int, help="train epoch")
+    parser.add_argument(
+        "--batch_size", default=32, type=int, help="train batch size"
+    )
+    parser.add_argument(
+        "--device",
+        default="cuda" if torch.cuda.is_available() else "cpu",
+        type=str,
+        help="train device",
+    )
     parser.add_argument(
         "-h",
         "--help",
@@ -59,7 +71,7 @@ def arg_parser(argv=None, evaluation=False):
 
     # # algorithm-specific parameters (e.g. for APPO)
     policy_class = get_policy_class(policy)
-    algo_class.add_cli_args(parser)
+    policy_class.add_args(parser)
 
     # # env-specific parameters (e.g. for Doom env)
     # add_env_args(env, parser)

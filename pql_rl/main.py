@@ -1,6 +1,6 @@
 import sys
 
-from pql_rl.arguments import parse_args
+from pql_rl.arguments import get_policy_class, parse_args
 
 # from algorithms.utils.arguments import (
 #     get_algo_class,
@@ -11,12 +11,11 @@ from pql_rl.arguments import parse_args
 
 def run_algorithm(cfg):
     # cfg = maybe_load_from_checkpoint(cfg)
-    # algo = get_algo_class(cfg.algo)(cfg)
+    policy = get_policy_class(cfg.policy)(cfg)
     # algo.initialize()
-    # status = algo.run()
+    status = policy.train()
     # algo.finalize()
-    # return status
-    pass
+    return status
 
 
 def main():
