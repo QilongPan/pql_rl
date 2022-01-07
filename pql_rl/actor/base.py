@@ -34,12 +34,22 @@ class Actor(object):
         if self.render:
             self.env.render()
 
-    def run(self, episode_len: int = None):
-        current_episode_len = 0
+    def run(self, step_num=0, episode_num: int = 0):
+        """
+        Params:
+            step_num: step number.
+            episode_num: episode number.
+        """
+        assert (step_num == 0 and episode_num >= 0) or (
+            step_num >= 0 and episode_num == 0
+        ), f"step_num and episode_num only one can greater than 0"
+        current_episode_num = 0
+        current_step_num = 0
         current_trajectory = []
         while True:
             actions = self.infer_api.get_actions([self.observation])
             next_observation, reward, done, info = self.env.step(actions[0])
+            current_step_num += 1
             current_trajectory.append(
                 (
                     self.observation,
@@ -56,29 +66,31 @@ class Actor(object):
             if done:
                 self.replay_buffer_api.add(current_trajectory)
                 self.observation = self.env.reset()
-                current_episode_len += 1
+                current_episode_num += 1
                 current_trajectory = []
-            if current_episode_len >= episode_len:
+            if (not step_num and current_episode_num >= episode_num) or (
+                not episode_num and step_num >= current_step_num
+            ):
                 break
 
 
-if __name__ == "__main__":
-    import gym
-    from pql_rl.buffer.base import ReplayBuffer
-    from pql_rl.infer.base import InferServer
-    from pql_rl.policy.random import DiscreteRandomPolicy
+# if __name__ == "__main__":
+#     import gym
+#     from pql_rl.buffer.base import ReplayBuffer
+#     from pql_rl.infer.base import InferServer
+#     from pql_rl.policy.random import DiscreteRandomPolicy
 
-    env_num = 2
-    buffer_size = 100
-    env = gym.make("CartPole-v1")
-    replay_buffer = ReplayBuffer(buffer_size)
-    discrete_random_policy = DiscreteRandomPolicy(action_num=2)
-    infer_server = InferServer(discrete_random_policy)
-    actor = Actor(env, infer_server, replay_buffer)
-    actor.run(episode_len=10)
-    env2 = gym.make("CartPole-v1")
-    actor2 = Actor(env2, infer_server, replay_buffer)
-    actor2.run(episode_len=10)
-    print(len(replay_buffer.trajectories))
-    batch = replay_buffer.sample(300)
-    print(batch["done"])
+#     env_num = 2
+#     buffer_size = 100
+#     env = gym.make("CartPole-v1")
+#     replay_buffer = ReplayBuffer(buffer_size)
+#     discrete_random_policy = DiscreteRandomPolicy(action_num=2)
+#     infer_server = InferServer(discrete_random_policy)
+#     actor = Actor(env, infer_server, replay_buffer)
+#     actor.run(episode_len=10)
+#     env2 = gym.make("CartPole-v1")
+#     actor2 = Actor(env2, infer_server, replay_buffer)
+#     actor2.run(episode_len=10)
+#     print(len(replay_buffer.trajectories))
+#     batch = replay_buffer.sample(300)
+#     print(batch["done"])

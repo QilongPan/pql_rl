@@ -5,8 +5,8 @@ class Collector(object):
     """
     actor container be used to collect data.
     收集数据需要：
-    1.环境
-    2.推理服
+    1.env container
+    2.推理服接口
     3.actor
     """
 
@@ -24,23 +24,11 @@ class Collector(object):
             create_env(self.cfg.env_name) for i in range(self.cfg.env_num)
         ]
 
-    def run(self):
+    def run(self, step_num=0, episode_num=0):
+        """
+        Params:
+            step_num:collect step number.
+            episode_num:collect episode number.
+        """
+
         pass
-
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter, add_help=False
-    )
-
-    # common args
-    parser.add_argument(
-        "--env_name", type=str, default=None, required=True, help="env name",
-    )
-    parser.add_argument(
-        "--env_num", type=int, default=None, required=True, help="env num",
-    )
-    cfg = parser.parse_known_args()[0]
-    collector = Collector(cfg)
